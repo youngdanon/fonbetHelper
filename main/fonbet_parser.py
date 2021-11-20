@@ -8,8 +8,6 @@ class EventsParser:
         self.session = requests.Session()
         self.session.headers = settings.FONBET_SESSION_HEADERS
         self.current_version = 0
-        updates: dict = self.get_updates()
-        EventsParser.initial_dump(updates)
 
     def get_updates(self):
         params = {'lang': 'ru',
@@ -39,5 +37,3 @@ class EventsParser:
     def dump(json_obj, path):
         with open(path, 'w', encoding='utf-8') as file:
             json.dump(json_obj, file, indent=2, ensure_ascii=False)
-
-
