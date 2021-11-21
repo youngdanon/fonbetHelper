@@ -5,7 +5,6 @@ import schedule
 import logging
 
 
-
 class SportKind(models.Model):
     fonkey = models.IntegerField('sport_id')
     name = models.CharField('sport_name', max_length=255)
@@ -17,7 +16,7 @@ class SportKind(models.Model):
 class SportSegment(models.Model):
     fonkey = models.IntegerField('segment_id')
     name = models.CharField('segment_name', max_length=255)
-    sport_kind = models.ForeignKey(SportKind, on_delete=models.CASCADE, null=True, blank=True)
+    sport_kind = models.ForeignKey(SportKind, on_delete=models.CASCADE, null=True, blank=True, related_name='segments')
 
     def __str__(self):
         return self.name
@@ -25,19 +24,17 @@ class SportSegment(models.Model):
 
 class Event(models.Model):
     fonkey = models.IntegerField('event_id')
+    name = models.TextField('name', default='EventName')
     full_name = models.TextField('event_full_name')
     url = models.URLField('event_url')
-    team1 = models.CharField('team1', max_length=100)
-    team2 = models.CharField('team2', max_length=100)
-    score1 = models.IntegerField('score1')
-    score2 = models.IntegerField('score2')
-    score_comment = models.CharField('comment', max_length=255)
+    score1 = models.IntegerField('score1', default=None)
+    score2 = models.IntegerField('score2', default=None)
+    score_comment = models.CharField('comment', max_length=255, default="")
     is_live = models.BooleanField('is_live')
-    start_time = models.DateTimeField('start_time')
-
+    start_time = models.IntegerField('start_time')
     is_blocked = models.BooleanField('is_blocked', default=False)
-
-    sport_segment = models.ForeignKey(SportSegment, on_delete=models.CASCADE, null=True, blank=True)
+    sport_segment = models.ForeignKey(SportSegment, on_delete=models.CASCADE, null=True, blank=True,
+                                      related_name='events')
 
     def __str__(self):
         return self.full_name
@@ -46,9 +43,13 @@ class Event(models.Model):
 class EventSegment(models.Model):
     fonkey = models.IntegerField('event_segment_id')
     name = models.CharField('event_segment_name', max_length=255)
+    score1 = models.IntegerField('score1', default=None)
+    score2 = models.IntegerField('score2', default=None)
     is_blocked = models.BooleanField('is_blocked', default='False')
-
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, blank=True)
+    start_time = models.IntegerField('start_time')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, blank=True, related_name='segments')
+    parent_id = models.IntegerField('parent_id', default=-1)
+    is_live = models.BooleanField('is_live', default=False)
 
     def __str__(self):
         return self.name
@@ -60,8 +61,9 @@ class Factor(models.Model):
     value = models.DecimalField('value', decimal_places=2, max_digits=100)
     is_blocked = models.BooleanField('is_blocked', default=False)
 
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, blank=True)
-    event_segment = models.ForeignKey(EventSegment, on_delete=models.CASCADE, null=True, blank=True)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, blank=True, related_name='factors')
+    event_segment = models.ForeignKey(EventSegment, on_delete=models.CASCADE, null=True, blank=True,
+                                      related_name='factors')
 
     def __str__(self):
         return self.get_fonkey_display()

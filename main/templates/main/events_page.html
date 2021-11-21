@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %} Events {% endblock %}
+{% block pagename %}Events {% endblock %}
+{% block content %}
+    <ul class="list-unstyled mt-3 mb-4">
+        {% for sk, sk_segments in events_content.items %}
+            <h1> {{ sk }}</h1>
+            {% for ss, ss_events in sk_segments.items %}
+                {% if ss_events %}
+                    <h4>{{ ss }}</h4>
+                {% endif %}
+                {% for event_name, event_params in ss_events.items %}
+                    <h6><b><a
+                            href="{{ event_params.url }}">{{ event_name }}</a></b><i>{{ event_params.score_comment }}</i>
+                    </h6>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for factor in event_params.factors %}
+                            <li>{{ factor }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% for event_segment in event_params.segments %}
+                        <p>{{ event_segment.name }}</p>
+                    {% endfor %}
+
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+    </ul>
+{% endblock %}
