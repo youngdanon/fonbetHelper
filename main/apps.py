@@ -72,11 +72,58 @@ class MainConfig(AppConfig):
     @staticmethod
     def init_event_miscs(events_miscs: list, Event, EventSegment):
         for misc in events_miscs:
-            current_event = Event.objects.get(fonkey=misc.get('id'))
+            current_event = Event.objects.filter(fonkey=misc.get('id')).first()
             if not current_event:
-                current_event = EventSegment.objects.get(fonkey=misc.get('id'))
+                current_event = EventSegment.objects.filter(fonkey=misc.get('id')).first()
+            current_event.score_comment = misc.get('comment')
+            current_event.score1 = misc.get('score1')
+            current_event.score2 = misc.get('score2')
+            current_event.save()
+        logger.info("Miscs initialization complete")
 
-        logger.info("SportKind/segment models initialization complete")
+    @staticmethod
+    def init_factors(factors: list, Event, EventSegment, Factor):
+        for event in factors:
+            is_event = True
+            current_event = Event.objects.filter(fonkey=event.get('e')).first()
+            if not current_event:
+                is_event = False
+                current_event = EventSegment.objects.filter(fonkey=event.get('e')).first()
+            for factor in event.get('factors'):
+                if is_event:
+                    Factor(fonkey=factor.get('f'),
+                           param=factor.get('p'),
+                           value=factor.get('v'),
+                           event=current_event).save()
+                else:
+                    Factor(fonkey=factor.get('f'),
+                           param=factor.get('p'),
+                           value=factor.get('v'),
+                           event_segment=current_event).save()
+        logger.info("Factors initialization complete")
+
+    @staticmethod
+    def init_event_blocks(event_blocks: list, Event, EventSegment, Factor):
+        for block in event_blocks:
+            current_event = Event.objects.filter(fonkey=block.get('eventId')).first()
+            if not current_event:
+                current_event = EventSegment.objects.filter(fonkey=block.get('eventId')).first()
+            if block.get('state') == 'blocked':
+                current_event.is_blocked = True
+            elif block.get('state') == 'unblocked':
+                current_event.is_blocked = False
+            elif block.get('state') == 'partial':
+                for factor_fonkey in block.get('factors'):
+                    # print(factor_fonkey)
+                    # print(current_event.factors.all())
+                    factor = current_event.factors.filter(fonkey=factor_fonkey).first()
+                    print(factor)
+                    if not factor:
+                        continue
+                    factor.is_blocked = True
+                    factor.save()
+            current_event.save()
+        logger.info("Event blocks initialization complete")
 
     def ready(self):
         if 'runserver' not in sys.argv:
@@ -88,4 +135,7 @@ class MainConfig(AppConfig):
             initial_updates = EventsParser().get_updates()
             MainConfig.init_sports(initial_updates.get('sports'), SportKind, SportSegment)
             MainConfig.init_events(initial_updates.get('events'), Event, EventSegment, SportSegment)
+            MainConfig.init_event_miscs(initial_updates.get('eventMiscs'), Event, EventSegment)
+            MainConfig.init_factors(initial_updates.get('customFactors'), Event, EventSegment, Factor)
+            MainConfig.init_event_blocks(initial_updates.get('eventBlocks'), Event, EventSegment, Factor)
             logger.info("All models initialization complete")
