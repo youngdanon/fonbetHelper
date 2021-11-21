@@ -15,6 +15,8 @@ def live_events_request(request):
                 factors = event.factors.filter(is_blocked=True)
                 segments = event.segments.filter(is_live=True)
                 ss_buffer[event.name] = {'url': event.url,
+                                         'score1': event.score1,
+                                         'score2': event.score2,
                                          'score_comment': event.score_comment,
                                          'factors': factors,
                                          'segments': segments}
