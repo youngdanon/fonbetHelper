@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from .models import SportKind, Event
+from .fonbet_parser import EventsParser
+
+fb_parser = EventsParser()
 
 
 def live_events_request(request):
@@ -12,9 +15,11 @@ def live_events_request(request):
             ss_buffer = {}
             live_events = ss.events.filter(is_live=True, is_blocked=False)
             for event in live_events:
-                factors = event.factors.filter(is_blocked=True)
+                factors = event.factors.all()
                 segments = event.segments.filter(is_live=True)
+                server_time = fb_parser.get_server_timestamp()
                 ss_buffer[event.name] = {'url': event.url,
+                                         'timer': server_time - event.start_time,
                                          'score1': event.score1,
                                          'score2': event.score2,
                                          'score_comment': event.score_comment,

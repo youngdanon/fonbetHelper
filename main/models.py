@@ -61,10 +61,21 @@ class Factor(models.Model):
     param = models.IntegerField('param_value', null=True)
     value = models.DecimalField('value', decimal_places=2, max_digits=100)
     is_blocked = models.BooleanField('is_blocked', default=False)
-
     event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, blank=True, related_name='factors')
     event_segment = models.ForeignKey(EventSegment, on_delete=models.CASCADE, null=True, blank=True,
                                       related_name='factors')
 
     def __str__(self):
         return str(self.get_fonkey_display())
+
+
+class BlockLog(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, blank=True, related_name='blocks')
+    event_segment = models.ForeignKey(EventSegment, on_delete=models.CASCADE, null=True, blank=True,
+                                      related_name='blocks')
+
+    time = models.DateTimeField('block_time', auto_now=True)
+    factor_name = models.CharField('factor_name', max_length=1024)
+    factor_param = models.IntegerField('factor_param', null=True)
+    factor_value = models.DecimalField('factor_value', decimal_places=2, max_digits=100)
+    score = models.CharField('score', max_length=255)

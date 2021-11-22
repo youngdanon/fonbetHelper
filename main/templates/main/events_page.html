@@ -1,34 +1,50 @@
 {% extends "base.html" %}
+{% load mathfilters %}
 
 {% block title %} Events {% endblock %}
 {% block pagename %}Events {% endblock %}
 {% block content %}
-    <ul class="list-unstyled mt-3 mb-4">
+    <div class="container events_list">
         {% for sk, sk_segments in events_content.items %}
-            <h1> {{ sk }}</h1>
-            {% for ss, ss_events in sk_segments.items %}
-                {% if ss_events %}
-                    <h4>{{ ss }}</h4>
-                {% endif %}
-                {% for event_name, event_params in ss_events.items %}
-                    <h6 class>
-                        <b><a href="{{ event_params.url }}">{{ event_name }}</a>
-                        {{ event_params.score1 }}:{{ event_params.score2 }}</b>
-                        {% if event_params.score_comment %}
-                            {{ event_params.score_comment }}
-                        {% endif %}
-                    </h6>
-                    <ul class="list-unstyled mt-3 mb-4">
-                        {% for factor in event_params.factors %}
-                            <li>{{ factor }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% for event_segment in event_params.segments %}
-                        <h6>{{ event_segment.name }}</h6>
-                    {% endfor %}
+            <div class="sport_kind_block">
+                <div class="sport_kind_header"><h2>{{ sk }}</h2></div>
+                {% for ss, ss_events in sk_segments.items %}
+                    {% if ss_events %}
+                        <div class="sport_segment_header"><h5>{{ ss }}</h5></div>
+                    {% endif %}
+                    {% for event_name, event_params in ss_events.items %}
+                        <div class="event_block">
+                            <div class="event_header"><h6 class>
+                                <b><a href="{{ event_params.url }}">{{ event_name }}</a></b>
+                                <b class="text-muted">{{ event_params.timer }}</b>
+                                <b>{{ event_params.score1 }}:{{ event_params.score2 }}</b>
+                                {% if event_params.score_comment %}
+                                    {{ event_params.score_comment }}
+                                {% endif %}
+                            </h6></div>
 
+                            {% for factor in event_params.factors %}
+                                <div class="factor">
+                                    <span>
+                                        {{ factor }}
+                                        {% if factor.param %}
+                                            {{ factor.value }}
+                                            ({{ factor.param|div:100 }})
+                                        {% endif %}
+                                    </span>
+
+                                </div>
+                            {% endfor %}
+                            {% for event_segment in event_params.segments %}
+                                <div class="event_segment_header"><h6>{{ event_segment.name }}</h6></div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
+            </div>
+
         {% endfor %}
-    </ul>
+    </div>
+
 {% endblock %}
+

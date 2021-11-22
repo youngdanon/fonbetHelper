@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'main',
     'django_celery_beat',
     'django_celery_results',
+    'mathfilters',
 ]
 
 MIDDLEWARE = [

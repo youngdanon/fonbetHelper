@@ -1,0 +1,41 @@
+div .container .sport_kind_block {
+    margin-bottom: 1em;
+}
+
+div .container .sport_kind_block .sport_kind_header {
+    padding: 0.5em 0.5em 0.5em 1em;
+    background-color: #1f5286;
+    color: #eeeeee;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+}
+
+div .container .sport_kind_block .sport_segment_header {
+    padding: 0.2em 0.2em 0.2em 2em;
+    background-color: #91c9fd;
+}
+
+div .container .sport_kind_block .event_header {
+    padding: 0.2em 0.2em 0.2em 3em;
+    background-color: #cecece;
+}
+
+div .container .sport_kind_block .event_segment_header {
+    padding: 0.2em 0.2em 0.2em 4em;
+    background-color: #cecece;
+}
+
+div .container .sport_kind_block .event_header a {
+    text-decoration: none;
+}
+
+div .container .sport_kind_block .event_block .factor {
+    padding: 0.2em 0.2em 0.2em 5em;
+    background-color: #f5f5f5;
+    border-top: 2px solid #d7d7d7;
+}
+
+div .container .sport_kind_block .event_block .factor span {
+    display:block;
+    width: 30%;
+}

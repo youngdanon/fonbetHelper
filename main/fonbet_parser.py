@@ -20,6 +20,12 @@ class EventsParser:
         self.current_version = updates_json.get('packetVersion')
         return updates_json
 
+    def get_server_timestamp(self):
+        url = 'https://clientsapi12.bkfon-resources.com/serverTime'
+        response = self.session.get(url)
+        response.raise_for_status()
+        return response.json()['serverTime']
+
     @staticmethod
     def initial_dump(updates):
         sport_kinds = []
