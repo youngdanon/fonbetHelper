@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import SportKind, Event
-from .fonbet_parser import EventsParser
+from .models import SportKind
+from main.utils.fonbet_parser import EventsParser
 
 fb_parser = EventsParser()
 

@@ -18,8 +18,8 @@ app.autodiscover_tasks()
 
 
 app.conf.beat_schedule = {
-    'printing_a_lot_of_huids' : {
-        'task': 'main.tasks.test',
-        'schedule': 1
+    'get_event_updates' : {
+        'task': 'main.tasks.get_updates',
+        'schedule': 3
     }
 }
