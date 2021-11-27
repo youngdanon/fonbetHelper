@@ -30,7 +30,7 @@ def on_startup():
     logger.info("Miscs initialization complete")
 
     for factor in initial_updates.get('customFactors'):
-        init_factors(factor)
+        init_factor(factor)
     logger.info("Factors initialization complete")
 
     for block in initial_updates.get('eventBlocks'):

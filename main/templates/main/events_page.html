@@ -27,8 +27,8 @@
                                 <div class="factor">
                                     <span>
                                         {{ factor }}
+                                        {{ factor.value }}
                                         {% if factor.param %}
-                                            {{ factor.value }}
                                             ({{ factor.param|div:100 }})
                                         {% endif %}
                                     </span>

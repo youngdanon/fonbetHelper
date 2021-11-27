@@ -36,7 +36,6 @@ def init_event(event):
               sport_segment=event_ss
               ).save()
     elif event.get('level') == 2:
-        # print(event.get('level'), event.get('parentId'))
         parent_event = Event.objects.get(fonkey=event.get('parentId'))
         EventSegment(fonkey=event.get('id'),
                      name=event_name,
@@ -57,13 +56,15 @@ def init_event_misc(misc):
     current_event = Event.objects.filter(fonkey=misc.get('id')).first()
     if not current_event:
         current_event = EventSegment.objects.filter(fonkey=misc.get('id')).first()
+        if not current_event:
+            return True
     current_event.score_comment = misc.get('comment')
     current_event.score1 = misc.get('score1')
     current_event.score2 = misc.get('score2')
     current_event.save()
 
 
-def init_factors(event):
+def init_factor(event):
     is_event = True
     current_event = Event.objects.filter(fonkey=event.get('e')).first()
     if not current_event:
